@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">PayMEDemo</string>
+    <string name="or">_______________or_______________</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="error_invalid_username">Invalid UserName</string>
+    <string name="invalid_mobile">Invalid mobile number</string>
+    <string name="Descreption">it take 4 days of silence to cut through the chatter and tend the soul --@edumail\n#GLS15 // whoa!!</string>
+    <string name="Netflix">Buy your netflix card and start streaming your favorite movies </string>
+    <string name="ebay">Buy ebay card and enjoy shopping for: Fashion, Electronics and many others</string>
+    <string name="Rinboo">Premium quality international calls to landlines and mobiles at super cheap rates</string>
+    <string name="Telemedic">Telemedic SAL is a medical device company decided to eliminating the distance between the patient and his physician</string>
+    <string name="Anghami">Purchase anghami vouchers in order to enjoy free music</string>
+</resources>
