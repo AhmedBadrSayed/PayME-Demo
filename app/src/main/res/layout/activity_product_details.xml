@@ -54,6 +54,7 @@
         android:layout_below="@+id/productLayout"
         android:layout_marginTop="30dp"
         android:text="Purchase"
+        android:id="@+id/submit"
         android:textStyle="bold"
         android:textColor="#ffffff"
         android:background="#0c3ee4"/>

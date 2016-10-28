@@ -22,10 +22,10 @@
                 android:layout_height="wrap_content">
 
                 <AutoCompleteTextView
-                    android:id="@+id/userNametv"
+                    android:id="@+id/emailtv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="User Name"
+                    android:hint="Email"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true" />

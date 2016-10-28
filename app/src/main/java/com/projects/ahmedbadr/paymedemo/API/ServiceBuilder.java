@@ -12,7 +12,7 @@ public class ServiceBuilder {
 
     public ServiceBuilder(){
         retrofit = new Retrofit.Builder()
-                .baseUrl("https://demo.paymeapp.co/api/v2")
+                .baseUrl("https://demo.paymeapp.co/api/v2/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }

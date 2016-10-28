@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -11,17 +12,25 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.projects.ahmedbadr.paymedemo.API.ServiceBuilder;
+import com.projects.ahmedbadr.paymedemo.API.ServiceInterfaces;
 import com.projects.ahmedbadr.paymedemo.Activities.Products;
 import com.projects.ahmedbadr.paymedemo.R;
 
 import java.util.regex.Pattern;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SignUp extends AppCompatActivity {
 
     private AutoCompleteTextView mFirstNameView, mLastNameView, mEmailView, mMobileView;
     private EditText mPasswordView;
     private Button btnSingnUp;
+    String firstName ,lastName, Email, Mobile, password;
     private static final Pattern NAME_PATTERN = Pattern
             .compile("[a-zA-Z]{1,250}");
     private static final Pattern PASWORD_PATTERN = Pattern
@@ -65,6 +74,31 @@ public class SignUp extends AppCompatActivity {
         btnSingnUp = (Button) findViewById(R.id.btnSignUp);
     }
 
+    public void PerformSignUp(){
+
+        //progressDialog = ProgressDialog.show(getActivity(),"", "Loading. Please wait...", true);
+        ServiceBuilder builder = new ServiceBuilder();
+        ServiceInterfaces.SignUp signUp = builder.NewUser();
+        Call<ServiceInterfaces> apiModelCall = signUp.SignUp("Normal",Email,password,firstName,lastName,Mobile,"qw","Gt557","Android");
+        apiModelCall.enqueue(new Callback<ServiceInterfaces>() {
+            @Override
+            public void onResponse(Call<ServiceInterfaces> call, Response<ServiceInterfaces> response) {
+                startActivity(new Intent(getApplication(),Products.class));
+                Log.v("Success",response.message());
+            }
+
+            @Override
+            public void onFailure(Call<ServiceInterfaces> call, Throwable t) {
+                Log.v("Retrieve Error", t.toString());
+                try {
+                    Toast.makeText(getApplication(), "Connection Failed", Toast.LENGTH_SHORT).show();
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
     private void attemptLogin() {
 
         // Reset errors.
@@ -74,11 +108,11 @@ public class SignUp extends AppCompatActivity {
         mMobileView.setError(null);
         mPasswordView.setError(null);
 
-        String firstName = mFirstNameView.getText().toString();
-        String lastName = mLastNameView.getText().toString();
-        String Email = mEmailView.getText().toString();
-        String Mobile = mMobileView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        firstName = mFirstNameView.getText().toString();
+        lastName = mLastNameView.getText().toString();
+        Email = mEmailView.getText().toString();
+        Mobile = mMobileView.getText().toString();
+        password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -141,7 +175,7 @@ public class SignUp extends AppCompatActivity {
         if (cancel) {
             focusView.requestFocus();
         } else {
-            startActivity(new Intent(this,Products.class));
+            PerformSignUp();
         }
     }
 

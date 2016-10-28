@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -11,29 +12,38 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.projects.ahmedbadr.paymedemo.API.ServiceBuilder;
+import com.projects.ahmedbadr.paymedemo.API.ServiceInterfaces;
 import com.projects.ahmedbadr.paymedemo.R;
 
 import java.util.regex.Pattern;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private AutoCompleteTextView mUserNameView;
+    private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private TextView newAccountTV;
     private static final Pattern NAME_PATTERN = Pattern
             .compile("[a-zA-Z]{1,250}");
     private static final Pattern PASWORD_PATTERN = Pattern
             .compile("[a-zA-Z0-9]{1,250}");
+    private static final Pattern EMAIL_PATTERN = Pattern
+            .compile("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 
-    String userName,password;
+    String email,password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mUserNameView = (AutoCompleteTextView) findViewById(R.id.userNametv);
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.emailtv);
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -59,13 +69,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         newAccountTV.setOnClickListener(this);
     }
 
+    public void PerformLogin(){
+
+        //progressDialog = ProgressDialog.show(getActivity(),"", "Loading. Please wait...", true);
+        ServiceBuilder builder = new ServiceBuilder();
+        ServiceInterfaces.LogIn logIn = builder.User();
+        Call<ServiceInterfaces> apiModelCall = logIn.login(email,password,"Gt557","qw","Android");
+        apiModelCall.enqueue(new Callback<ServiceInterfaces>() {
+            @Override
+            public void onResponse(Call<ServiceInterfaces> call, Response<ServiceInterfaces> response) {
+                startActivity(new Intent(getApplication(),Products.class));
+                Log.v("Success",response.message());
+            }
+
+            @Override
+            public void onFailure(Call<ServiceInterfaces> call, Throwable t) {
+                Log.v("Retrieve Error", t.toString());
+                try {
+                    Toast.makeText(getApplication(), "SignUp First", Toast.LENGTH_SHORT).show();
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
     private void attemptLogin() {
 
         // Reset errors.
-        mUserNameView.setError(null);
+        mEmailView.setError(null);
         mPasswordView.setError(null);
 
-        userName = mUserNameView.getText().toString();
+        email = mEmailView.getText().toString();
         password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -82,21 +117,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             cancel = true;
         }
 
-        // Check for a valid userName address.
-        if (TextUtils.isEmpty(userName)) {
-            mUserNameView.setError(getString(R.string.error_field_required));
-            focusView = mUserNameView;
+        // Check for a valid email
+        if (TextUtils.isEmpty(email)) {
+            mEmailView.setError(getString(R.string.error_field_required));
+            focusView = mEmailView;
             cancel = true;
-        } else if (!isUserNameValid(userName)) {
-            mUserNameView.setError(getString(R.string.error_invalid_username));
-            focusView = mUserNameView;
+        }else if (!isEmailValid(email)) {
+            mEmailView.setError(getString(R.string.error_invalid_email));
+            focusView = mEmailView;
             cancel = true;
         }
 
         if (cancel) {
             focusView.requestFocus();
         } else {
-            startActivity(new Intent(this,Products.class));
+            PerformLogin();
         }
     }
 
@@ -106,6 +141,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private boolean isPasswordValid(String password) {
         return PASWORD_PATTERN.matcher(password).matches() && password.length() > 4;
+    }
+
+    private boolean isEmailValid(String email) {
+        return EMAIL_PATTERN.matcher(email).matches();
     }
 
     @Override
